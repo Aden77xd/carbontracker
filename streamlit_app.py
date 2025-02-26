@@ -18,7 +18,7 @@ st.title("Personal Carbon Calculator App ⚠️")
 
 # User inputs
 st.subheader("🌍 Your Country")
-country = st.selectbox("Select", ["India"])
+country = st.selectbox("Select", ["Malaysia"])
 
 col1, col2 = st.columns(2)
 
