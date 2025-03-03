@@ -8,10 +8,19 @@ from folium.plugins import BeautifyIcon
 
 # Emission constants
 EMISSION_FACTORS = {
-    "transportation": 0.14,  # kgCO2/km
-    "electricity": 0.82,     # kgCO2/kWh
-    "diet": 1.25,            # kgCO2/meal
-    "waste": 0.1             # kgCO2/kg
+    "MY": {
+        "transportation": 0.15,  # kgCO2/km
+        "electricity": 0.85,     # kgCO2/kWh
+        "diet": 1.3,             # kgCO2/meal
+        "waste": 0.12            # kgCO2/kg
+    },
+    "US": {
+        "transportation": 0.25,
+        "electricity": 0.4,
+        "diet": 1.5,
+        "waste": 0.1
+    },
+    # Add IN, CN...
 }
 
 COUNTRY_AVERAGES = {
@@ -112,17 +121,13 @@ if home_coords and work_coords:
     with st.expander("View Map", expanded=True):
         folium_static(m, width=1200, height=400)
 
-def calculate_emissions(inputs):
-    """Calculate all emission components"""
+def calculate_emissions(inputs, country):
+    factors = EMISSION_FACTORS[country]
     emissions = {
-        "transport": (inputs['distance'] * 2 * inputs['work_days'] * 
-                     EMISSION_FACTORS['transportation']) / 1000,
-        "electricity": (inputs['electricity'] * 12 * 
-                       EMISSION_FACTORS['electricity']) / 1000,
-        "diet": (inputs['meals'] * 365 * 
-                EMISSION_FACTORS['diet']) / 1000,
-        "waste": (inputs['waste'] * 52 * 
-                 EMISSION_FACTORS['waste']) / 1000
+        "transport": (inputs['distance'] * 2 * inputs['work_days'] * factors['transportation']) / 1000,
+        "electricity": (inputs['electricity'] * 12 * factors['electricity']) / 1000,
+        "diet": (inputs['meals'] * 365 * factors['diet']) / 1000,
+        "waste": (inputs['waste'] * 52 * factors['waste']) / 1000
     }
     emissions["total"] = sum(emissions.values())
     return emissions
